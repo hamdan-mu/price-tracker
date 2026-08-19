@@ -53,6 +53,19 @@ export default function home() {
     setNewStore("");
   }
 
+  async function handleDelete(id) {
+    const { error } = await supabase
+      .from("purchases")
+      .delete()
+      .eq("id", id);
+
+    if (error) {
+      console.error("Error deleting purchases:", error.message);
+      return;
+    }
+
+    setPurchases(purchases.filter(item => item.id !== id));
+  }
 
   return (
     <div>
@@ -78,7 +91,7 @@ export default function home() {
       <ul>
         {
           purchases.map((p) =>
-            <li key={p.id}>{p.item} - ${p.price} at {p.store}</li>
+            <li key={p.id}>{p.item} - ${p.price} at {p.store} <button type="button" onClick={() => handleDelete(p.id)}>Delete Purchase</button></li>
           )
         }
       </ul>
