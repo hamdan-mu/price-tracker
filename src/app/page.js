@@ -28,6 +28,8 @@ export default function home() {
     fetchPurchases();
   }, []);
 
+  const totalSpend = purchases.reduce((acc, item) => acc + item.price, 0);
+
   async function handleSubmit(e) {
     e.preventDefault();
 
@@ -95,6 +97,7 @@ export default function home() {
           )
         }
       </ul>
+      <p>Total spent: ${totalSpend.toFixed(2)}</p>
     </div>
   );
 }
