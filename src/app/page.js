@@ -1,5 +1,7 @@
 "use client";
-import { useState } from "react";
+import { use, useState } from "react";
+import { useEffect } from "react";
+import { supabase } from "@/lib/supabase";
 
 
 
@@ -7,12 +9,24 @@ export default function home() {
   const [newItem, setNewItem] = useState("")
   const [newPrice, setNewPrice] = useState("")
   const [newStore, setNewStore] = useState("")
-  const [purchases, setPurchases] = useState([
-    { id: 1, item: "Rice", price: 12, store: "Giant" },
-    { id: 2, item: "Milk", price: 8, store: "99 Speedmart" },
-    { id: 3, item: "Rice", price: 15, store: "Cold Storage" },
-    { id: 4, item: "Bread", price: 5, store: "99 Speedmart" },
-  ]);
+  const [purchases, setPurchases] = useState([]);
+
+  useEffect(() => {
+    async function fetchPurchases() {
+      const { data, error } = await supabase
+        .from("purchases")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error("Error fetching purchases:", error.message, error.details, error.hint);
+      } else {
+        setPurchases(data);
+      }
+    }
+
+    fetchPurchases();
+  }, []);
 
   function handleSubmit(e) {
     e.preventDefault();
