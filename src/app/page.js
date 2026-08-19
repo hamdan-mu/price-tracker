@@ -31,6 +31,12 @@ export default function home() {
   const totalSpend = purchases.reduce((acc, item) => acc + item.price, 0);
   const averagePrice = purchases.length === 0 ? 0 : totalSpend / purchases.length;
   const averagePriceDisplay = averagePrice === 0 ? "No Purchases yet" : `$${averagePrice.toFixed(2)}`;
+  const cheapestStorePerItem = purchases.reduce((obj, purchase) => {
+    if (!obj[purchase.item] || purchase.price < obj[purchase.item].price) {
+      obj[purchase.item] = { price: purchase.price, store: purchase.store };
+    }
+    return obj;
+  }, {})
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -101,6 +107,13 @@ export default function home() {
       </ul>
       <p>Total spent: ${totalSpend.toFixed(2)}</p>
       <p>Average Price: {averagePriceDisplay}</p>
+      <h2>Cheapest Store per Item</h2>
+      <ul>
+        {
+          Object.entries(cheapestStorePerItem).map(([item, info]) => (
+            <li key={item}>{item}: cheapest at {info.store} (${info.price})</li>
+          ))}
+      </ul>
     </div>
   );
 }
