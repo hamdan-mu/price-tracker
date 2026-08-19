@@ -29,6 +29,8 @@ export default function home() {
   }, []);
 
   const totalSpend = purchases.reduce((acc, item) => acc + item.price, 0);
+  const averagePrice = purchases.length === 0 ? 0 : totalSpend / purchases.length;
+  const averagePriceDisplay = averagePrice === 0 ? "No Purchases yet" : `$${averagePrice.toFixed(2)}`;
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -98,6 +100,7 @@ export default function home() {
         }
       </ul>
       <p>Total spent: ${totalSpend.toFixed(2)}</p>
+      <p>Average Price: {averagePriceDisplay}</p>
     </div>
   );
 }
