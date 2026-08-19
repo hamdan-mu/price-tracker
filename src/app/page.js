@@ -28,15 +28,26 @@ export default function home() {
     fetchPurchases();
   }, []);
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    const newPurchase = {
-      id: purchases.length + 1,
-      item: newItem,
-      price: Number(newPrice),
-      store: newStore,
-    };
-    setPurchases([...purchases, newPurchase]);
+
+    const { data, error } = await supabase
+      .from("purchases")
+      .insert([
+        {
+          item: newItem,
+          price: newPrice,
+          store: newStore,
+        },
+      ])
+      .select();
+
+    if (error) {
+      console.error("Error adding purchases:", error.message);
+      return;
+    }
+
+    setPurchases([data[0], ...purchases]);
     setNewItem("");
     setNewPrice("");
     setNewStore("");
