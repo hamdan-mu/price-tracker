@@ -89,59 +89,112 @@ export default function home() {
   }
 
   return (
-    <div>
-      <h1>My purchases</h1>
-      <form onSubmit={handleSubmit}>
-        <input
-          value={newItem}
-          onChange={(e) => setNewItem(e.target.value)}
-          placeholder="Item"
-        />
-        <input
-          value={newPrice}
-          onChange={(e) => setNewPrice(e.target.value)}
-          placeholder="Price"
-        />
-        <input
-          value={newStore}
-          onChange={(e) => setNewStore(e.target.value)}
-          placeholder="Store"
-        />
-        <button type="submit">Add purchases</button>
-      </form>
-      <ul>
-        {
-          purchases.map((p) =>
-            <li key={p.id}>{p.item} - ${p.price} at {p.store} <button type="button" onClick={() => handleDelete(p.id)}>Delete Purchase</button></li>
-          )
-        }
-      </ul>
-      <p>Total spent: ${totalSpend.toFixed(2)}</p>
-      <p>Average Price: {averagePriceDisplay}</p>
-      <h2>Cheapest Store per Item</h2>
-      <ul>
-        {
-          Object.entries(cheapestStorePerItem).map(([item, info]) => (
-            <li key={item}>{item}: cheapest at {info.store} (${info.price})</li>
-          ))}
-      </ul>
-      <select value={selectedItem} onChange={(e) => setSelectedItem(e.target.value)}>
-        <option value="">Select an item</option>
-        {uniqueItems.map((item) => (
-          <option key={item} value={item}>{item}</option>
-        ))}
-      </select>
-      {selectedItem && (
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" />
-            <YAxis />
-            <Tooltip />
-            <Line type="linear" dataKey="price" stroke="#8884d8" />
-          </LineChart>
-        </ResponsiveContainer>
-      )}
+    <div className="min-h-screen p-6 lg:p-10">
+      <h1 className="font-mono text-2xl font-bold text-accent mb-8">
+        My Purchases
+      </h1>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 flex flex-col gap-6">
+          <div className="grid grid-cols-3 gap-4">
+            <div className="bg-foreground/5 border border-foreground/10 rounded-xl p-6">
+              <p className="text-muted text-sm uppercase tracking-wide mb-1">Total spent</p>
+              <p className="font-mono text-3xl font-bold text-foreground">${totalSpend.toFixed(2)}</p>
+            </div>
+
+            <div className="bg-foreground/5 border border-foreground/10 rounded-xl p-6">
+              <p className="text-muted text-sm uppercase tracking-wide mb-1">Average Price</p>
+              <p className="font-mono text-3xl font-bold text-foreground">{averagePriceDisplay}</p>
+            </div>
+
+            <div className="bg-foreground/5 border border-foreground/10 rounded-xl p-6">
+              <p className="text-muted text-sm uppercase tracking-wide mb-1">Cheapest Store per Item</p>
+              <ul>
+                {
+                  Object.entries(cheapestStorePerItem).map(([item, info]) => (
+                    <li key={item}>{item}: cheapest at {info.store} (${info.price})</li>
+                  ))}
+              </ul>
+            </div>
+          </div>
+
+          <div className="bg-foreground/5 border border-foreground/10 rounded-xl p-6">
+            <select
+              value={selectedItem}
+              onChange={(e) => setSelectedItem(e.target.value)}
+              className="bg-foreground/5 border border-foreground/10 rounded-lg px-3 py-2 text-foreground focus:outline-none focus:border-accent"
+            >
+              <option value="" className="bg-background text-foreground">Select an item</option>
+              {uniqueItems.map((item) => (
+                <option key={item} value={item} className="bg-background text-foreground">{item}</option>
+              ))}
+            </select>
+            {selectedItem && (
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="date" stroke="#8A94A6" />
+                  <YAxis stroke="#8A94A6" />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "#16213E",
+                      border: "1px solid rgba(244,239,225,0.1)",
+                      borderRadius: "8px",
+                    }}
+                    labelStyle={{ color: "#8A94A6" }}
+                    itemStyle={{ color: "#E3A72F" }}
+                  />
+                  <Line type="linear" dataKey="price" stroke="#E3A72F" />
+                </LineChart>
+              </ResponsiveContainer>
+            )}
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-6">
+          <div className="bg-foreground/5 border border-foreground/10 rounded-xl p-6">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+              <input
+                className="bg-background border border-foreground/20 rounded-lg px-3 py-2 text-foreground placeholder:text-muted focus:outline-none focus:border-accent"
+                value={newItem}
+                onChange={(e) => setNewItem(e.target.value)}
+                placeholder="Item"
+              />
+              <input
+                className="bg-background border border-foreground/20 rounded-lg px-3 py-2 text-foreground placeholder:text-muted focus:outline-none focus:border-accent"
+                value={newPrice}
+                onChange={(e) => setNewPrice(e.target.value)}
+                placeholder="Price"
+              />
+              <input
+                className="bg-background border border-foreground/20 rounded-lg px-3 py-2 text-foreground placeholder:text-muted focus:outline-none focus:border-accent"
+                value={newStore}
+                onChange={(e) => setNewStore(e.target.value)}
+                placeholder="Store"
+              />
+              <button className="bg-accent text-background font-semibold rounded-lg px-4 py-2 hover:opacity-90 transition" type="submit">Add purchases</button>
+            </form>
+          </div>
+          <div className="bg-foreground/5 border border-foreground/10 rounded-xl p-6">
+            <ul>
+              {
+                purchases.map((p) =>
+                  <li className="flex justify-between items-center border-b border-foreground/10 py-2" key={p.id}>
+                    <span>{p.item} - ${p.price} at {p.store}</span>
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(p.id)}
+                      className="text-danger text-sm hover:underline"
+                    >
+                      Delete
+                    </button>
+                  </li>
+                )
+              }
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
