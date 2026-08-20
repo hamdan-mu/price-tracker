@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Price Tracker
 
-## Getting Started
+A personal shopping tracker to log purchases and answer a simple question: is this cheap or expensive, and where should I actually be buying it?
 
-First, run the development server:
+![Dashboard screenshot](./screenshot.png)
 
+## Features
+
+- Log purchases (item, price, store) with instant persistence
+- Live dashboard: total spend, average price, cheapest store per item
+- Price trend chart per item over time
+- Delete purchases
+
+## Tech stack
+
+- [Next.js](https://nextjs.org/) (App Router) + React
+- [Supabase](https://supabase.com/) (PostgreSQL) for the database
+- [Tailwind CSS](https://tailwindcss.com/) for styling
+- [Recharts](https://recharts.org/) for the price trend chart
+
+## Running locally
+
+1. Clone the repo
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+   git clone https://github.com/hamdan-mu/price-tracker.git
+   cd price-tracker
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies
+```bash
+   npm install
+```
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+3. Set up Supabase
+   - Create a project at [supabase.com](https://supabase.com)
+   - Create a `purchases` table with columns: `item` (text), `price` (numeric), `store` (text)
+   - Enable RLS and add a policy allowing `anon` access (see `/docs` if you add setup notes later, or ask if you're setting this up yourself)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Add environment variables — create `.env.local` in the project root:
+```
+    NEXT_PUBLIC_SUPABASE_URL=your-project-url
+    NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+```
 
-## Learn More
+5. Run the dev server
+```bash
+   npm run dev
+```
+   Open [http://localhost:3000](http://localhost:3000)
 
-To learn more about Next.js, take a look at the following resources:
+## Why I built this
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+I struggled to judge whether a price was actually good or bad. This tracks purchases over time so I can see real trends instead of guessing.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Status
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Actively in development. Planned: editing purchases, category-based spend breakdown, deployment.
