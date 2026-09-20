@@ -17,6 +17,10 @@ export default function PurchaseForm({ onSubmit }) {
         setNewItem("");
         setNewPrice("");
         setNewStore("");
+        setNewBrand("");
+        setNewQuantity("");
+        setNewUnit("");
+        setNewOriginalPrice("");
     }
 
     return (
