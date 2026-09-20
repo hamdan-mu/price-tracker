@@ -7,8 +7,8 @@ export default function PurchaseForm({ onSubmit }) {
     const [newPrice, setNewPrice] = useState("");
     const [newStore, setNewStore] = useState("");
     const [newBrand, setNewBrand] = useState("");
-    const [newQuantity, setNewQuantity] = useState("");
-    const [newUnit, setNewUnit] = useState("");
+    const [newQuantity, setNewQuantity] = useState("1");
+    const [newUnit, setNewUnit] = useState("pcs");
     const [newOriginalPrice, setNewOriginalPrice] = useState("");
 
     async function handleSubmit(e) {
@@ -18,9 +18,9 @@ export default function PurchaseForm({ onSubmit }) {
             price: newPrice,
             store: newStore,
             brand: newBrand,
-            quantity: newQuantity,
-            unit: newUnit,
-            original_price: newOriginalPrice
+            quantity: newQuantity || 1,
+            unit: newUnit || "pcs",
+            original_price: newOriginalPrice || null
         });
         setNewItem("");
         setNewPrice("");
@@ -69,7 +69,6 @@ export default function PurchaseForm({ onSubmit }) {
                     value={newUnit}
                     onChange={(e) => setNewUnit(e.target.value)}
                 >
-                    <option value="" className="bg-background text-foreground">Select a Unit</option>
                     {VALID_UNITS.map((u) => (
                         <option key={u} value={u}>{u}</option>
                     ))}
