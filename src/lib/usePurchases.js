@@ -21,10 +21,10 @@ export function usePurchases() {
         fetchPurchases();
     }, []);
 
-    async function addPurchase({ item, price, store }) {
+    async function addPurchase({ item, price, store, brand, quantity, unit, original_price }) {
         const { data, error } = await supabase
             .from("purchases")
-            .insert([{ item, price, store }])
+            .insert([{ item, price, store, brand, quantity, unit, original_price }])
             .select();
 
         if (error) {

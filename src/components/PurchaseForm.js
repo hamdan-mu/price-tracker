@@ -13,7 +13,15 @@ export default function PurchaseForm({ onSubmit }) {
 
     async function handleSubmit(e) {
         e.preventDefault();
-        await onSubmit({ item: newItem, price: newPrice, store: newStore });
+        await onSubmit({
+            item: newItem,
+            price: newPrice,
+            store: newStore,
+            brand: newBrand,
+            quantity: newQuantity,
+            unit: newUnit,
+            original_price: newOriginalPrice
+        });
         setNewItem("");
         setNewPrice("");
         setNewStore("");
