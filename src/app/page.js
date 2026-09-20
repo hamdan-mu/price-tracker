@@ -1,34 +1,17 @@
 "use client";
-import { use, useState } from "react";
-import { useEffect } from "react";
-import { supabase } from "@/lib/supabase";
+import { useState } from "react";
+import { usePurchases } from "@/lib/usePurchases";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 
 
 export default function home() {
-  const [newItem, setNewItem] = useState("")
-  const [newPrice, setNewPrice] = useState("")
-  const [newStore, setNewStore] = useState("")
-  const [purchases, setPurchases] = useState([]);
+  const { purchases, addPurchase, deletePurchase} = usePurchases();
+  
+  const [newItem, setNewItem] = useState("");
+  const [newPrice, setNewPrice] = useState("");
+  const [newStore, setNewStore] = useState("");
   const [selectedItem, setSelectedItem] = useState("");
-
-  useEffect(() => {
-    async function fetchPurchases() {
-      const { data, error } = await supabase
-        .from("purchases")
-        .select("*")
-        .order("created_at", { ascending: false });
-
-      if (error) {
-        console.error("Error fetching purchases:", error.message, error.details, error.hint);
-      } else {
-        setPurchases(data);
-      }
-    }
-
-    fetchPurchases();
-  }, []);
 
   const totalSpend = purchases.reduce((acc, item) => acc + item.price, 0);
   const averagePrice = purchases.length === 0 ? 0 : totalSpend / purchases.length;
@@ -51,41 +34,10 @@ export default function home() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-
-    const { data, error } = await supabase
-      .from("purchases")
-      .insert([
-        {
-          item: newItem,
-          price: newPrice,
-          store: newStore,
-        },
-      ])
-      .select();
-
-    if (error) {
-      console.error("Error adding purchases:", error.message);
-      return;
-    }
-
-    setPurchases([data[0], ...purchases]);
+    await addPurchase({ item: newItem, price: newPrice, store: newStore});
     setNewItem("");
     setNewPrice("");
     setNewStore("");
-  }
-
-  async function handleDelete(id) {
-    const { error } = await supabase
-      .from("purchases")
-      .delete()
-      .eq("id", id);
-
-    if (error) {
-      console.error("Error deleting purchases:", error.message);
-      return;
-    }
-
-    setPurchases(purchases.filter(item => item.id !== id));
   }
 
   return (
@@ -183,7 +135,7 @@ export default function home() {
                     <span>{p.item} - ${p.price} at {p.store}</span>
                     <button
                       type="button"
-                      onClick={() => handleDelete(p.id)}
+                      onClick={() => deletePurchase(p.id)}
                       className="text-danger text-sm hover:underline"
                     >
                       Delete
