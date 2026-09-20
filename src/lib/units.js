@@ -1,0 +1,1 @@
+export const VALID_UNITS = ["g", "kg", "ml", "l", "pcs"];
